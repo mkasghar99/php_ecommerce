@@ -46,6 +46,22 @@ mysqli_close($conn);
     </style>
 </head>
 <body>
+
+<h2>Add a New Product</h2>
+<form method="post" action="add_product.php">
+    <label for="name">Name:</label>
+    <input type="text" name="name" required>
+    <br>
+    <label for="description">Description:</label>
+    <textarea name="description" required></textarea>
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" step="0.01" name="price" required>
+    <br>
+    <input type="submit" value="Add Product">
+</form>
+
+
     <h1>Products</h1>
     <table>
         <thead>
@@ -63,6 +79,10 @@ mysqli_close($conn);
                     <td><?= $row['name'] ?></td>
                     <td><?= $row['description'] ?></td>
                     <td>$<?= number_format($row['price'], 2) ?></td>
+                    <td>
+                        <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
+                        <a href="delete_product.php?id=<?= $row['id'] ?>">Delete</a>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
