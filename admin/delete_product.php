@@ -1,4 +1,10 @@
 <?php
+// Check if the user is an admin
+session_start();
+if ($_SESSION['role'] !== 'admin') {
+    die('Access denied. Only administrators can access this page.');
+}
+
 // Database connection settings
 $host = 'localhost';
 $username = 'root';
@@ -19,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     // Delete the product from the database
     $query = "DELETE FROM products WHERE id=$product_id";
     if (mysqli_query($conn, $query)) {
-        header("Location: products.php");
+        header("Location: index.php");
     } else {
         echo "Error deleting product: " . mysqli_error($conn);
     }
