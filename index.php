@@ -13,16 +13,24 @@ if (!$conn) {
     die('Database connection failed: ' . mysqli_connect_error());
 }
 
-// Fetch products from the database
-$query = 'SELECT * FROM products';
+// Define the number of products per page
+$productsPerPage = 2; // You can adjust this value
+
+// Get the current page number from the URL (e.g., products.php?page=2)
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Calculate the starting product index for the current page
+$start = ($page - 1) * $productsPerPage;
+
+//  SQL query to include LIMIT
+$query = "SELECT * FROM products LIMIT $start, $productsPerPage";
 $result = mysqli_query($conn, $query);
 
 if (!$result) {
     die('Query failed: ' . mysqli_error($conn));
 }
 
-// Close the database connection
-mysqli_close($conn);
+
 ?>
 
 <!DOCTYPE html>
@@ -72,5 +80,29 @@ mysqli_close($conn);
             <?php endwhile; ?>
         </tbody>
     </table>
+
+<?php
+// Calculate the total number of products
+$totalProductsQuery = "SELECT COUNT(*) as total FROM products";
+$totalProductsResult = mysqli_query($conn, $totalProductsQuery);
+$totalProductsRow = mysqli_fetch_assoc($totalProductsResult);
+$totalProducts = $totalProductsRow['total'];
+
+// Calculate the total number of pages
+$totalPages = ceil($totalProducts / $productsPerPage);
+
+// Generate pagination links
+echo '<div class="pagination">';
+for ($i = 1; $i <= $totalPages; $i++) {
+    if ($i == $page) {
+        echo "<span class='current'>$i</span>";
+    } else {
+        echo "<a href='index.php?page=$i'>$i</a>";
+    }
+}
+echo '</div>';
+
+?>
+
 </body>
 </html>
