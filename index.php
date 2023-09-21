@@ -75,6 +75,14 @@ if (!$result) {
                     <td><?= $row['description'] ?></td>
                     <td>$<?= number_format($row['price'], 2) ?></td>
                     <td>
+                        <!-- Add to Cart form -->
+<form method="post" action="cart.php">
+    <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
+    <input type="hidden" name="product_name" value="<?= $row['name'] ?>">
+    <input type="hidden" name="product_price" value="<?= number_format($row['price'], 2) ?>">
+    <input type="number" name="quantity" value="1" min="1">
+    <input type="submit" name="add_to_cart" value="Add to Cart">
+</form>
                     </td>
                 </tr>
             <?php endwhile; ?>
