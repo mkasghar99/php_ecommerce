@@ -22,8 +22,16 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 // Calculate the starting product index for the current page
 $start = ($page - 1) * $productsPerPage;
 
+//if category is set
+$category = "";
+$filterByCategory = isset($_GET['category']) ? $_GET['category'] : null;
+if ($filterByCategory) {
+    $category .= " WHERE category_id = $filterByCategory";
+}
+
+
 //  SQL query to include LIMIT
-$query = "SELECT * FROM products LIMIT $start, $productsPerPage";
+$query = "SELECT * FROM products $category LIMIT $start, $productsPerPage";
 $result = mysqli_query($conn, $query);
 
 if (!$result) {
@@ -56,7 +64,19 @@ if (!$result) {
 <body>
 
 
-
+    <!-- Category links/buttons -->
+    <div class="categories">
+        <a href="index.php">All</a>
+        <?php
+        // Fetch categories from the database and display links/buttons
+        $categoryQuery = "SELECT * FROM categories";
+        $categoryResult = mysqli_query($conn, $categoryQuery);
+        
+        while ($category = mysqli_fetch_assoc($categoryResult)) {
+            echo "<a href='index.php?category=" . $category['id'] . "'>" . $category['name'] . "</a>";
+        }
+        ?>
+    </div>
     <h1>Products</h1>
     <table>
         <thead>
